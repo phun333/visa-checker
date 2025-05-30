@@ -8,9 +8,9 @@ cacheService.startCleanupInterval();
 
 // Zamanlanmış görevi başlat
 cron.schedule(config.app.checkInterval, checkAppointments);
-console.log(`Vize randevu kontrolü başlatıldı. Kontrol sıklığı: ${config.app.checkInterval}`);
-console.log(`Hedef ülke: ${config.app.targetCountry}`);
-console.log(`Hedef ülkeler: ${config.app.missionCountries.join(', ')}`);
+console.log(`Vize randevu kontrolü başlatıldı.\nKontrol sıklığı: ${config.app.checkInterval}\n`);
+console.log(`Takip edilen vize ülkeleri: ${config.app.targetCountry}`);
+console.log(`Takip edilen şehirler: ${config.app.missionCountries.join(', ')}`);
 if (config.app.targetCities.length > 0) {
   console.log(`Hedef şehirler: ${config.app.targetCities.join(', ')}`);
 }
