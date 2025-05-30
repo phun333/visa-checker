@@ -10,13 +10,23 @@ import { extractCity } from "./cityExtractor";
  * Yeni randevuları kontrol eder ve uygun olanları Telegram'a gönderir
  */
 export async function checkAppointments(): Promise<void> {
+  const now = new Date().toLocaleString("tr-TR", {
+    timeZone: "Europe/Istanbul",
+    dateStyle: "short",
+    timeStyle: "medium",
+  });
+  console.log(`🔍 [${now}] Vize randevu kontrolü başlatıldı...`);
+  
   try {
     const appointments = await fetchAppointments();
 
     if (appointments.length === 0) {
-      console.log("Randevu bulunamadı veya bir hata oluştu");
+      console.log("❌ Randevu bulunamadı veya bir hata oluştu");
       return;
     }
+
+    let validAppointmentCount = 0;
+    let newAppointmentCount = 0;
 
     for (const appointment of appointments) {
       // First, check if the appointment is valid based on configured filters
@@ -40,12 +50,16 @@ export async function checkAppointments(): Promise<void> {
           );
         }
         await processNewAppointment(appointment, appointmentKey);
+        newAppointmentCount++;
       } else if (config.app.debug) {
         console.log(
           `Randevu (ID: ${appointment.id}) zaten önbellekte. Atlanıyor.`
         );
       }
+      validAppointmentCount++;
     }
+
+    console.log(`✅ ${validAppointmentCount} geçerli randevu bulundu ve ${newAppointmentCount} yeni randevu işlendi`);
   } catch (error) {
     console.error("Randevu kontrolü sırasında hata:", error);
   }
